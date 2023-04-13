@@ -1,0 +1,27 @@
+### Import cities
+POST {{host}}/api/v1/cities/import
+X-APP-KEY: fake-api-key
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="cities"; filename="cities.csv""
+
+< ./cities.csv
+--WebAppBoundary--
+
+### Get cities
+GET {{host}}/api/v1/cities
+
+### Get cities / Search
+GET {{host}}/api/v1/cities?page=1&size=5&search=San
+
+### Update city
+PUT {{host}}/api/v1/cities/5
+X-APP-KEY: fake-api-key
+Content-Type: application/json
+
+{
+  "name": "Warsaw",
+  "photo": "WarsawImageUrl"
+}
+

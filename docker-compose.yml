@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=cities
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  city-be-app:
+    image: fishbonne/cities-be
+    container_name: city-be-app
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/cities
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  city-fe-app:
+    image: fishbonne/cities-fe
+    container_name: city-fe-app
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - city-be-app
+volumes:
+  db:
+    driver: local
+
+
