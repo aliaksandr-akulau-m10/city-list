@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CityViewModel {
     private Long id;
-    @NotNull
+    @NotNull(message = "city name should be presented")
     private String name;
-    @NotEmpty
+    @NotEmpty(message = "city photo should be presented")
     private String photo;
 }

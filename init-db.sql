@@ -2,10 +2,10 @@ create table if not exists city
 (
     id    serial
         constraint city_pk
-            primary key,
+            not null primary key,
     name  varchar not null,
     photo varchar not null
 );
 
-create unique index if not exists city_id_uindex
-    on city (id);
+create index if not exists city_name_index
+    on city (name);

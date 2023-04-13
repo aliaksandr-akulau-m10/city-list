@@ -47,11 +47,11 @@ class CityServiceImplTest {
             // then
             verify(cityRepository, times(1)).deleteAll();
             verify(cityRepository, times(1)).saveAll(List.of(
-                    City.builder().name("Tokyo").photo("TokyoPhoto").build(),
-                    City.builder().name("Jakarta").photo("JakartaPhoto").build(),
-                    City.builder().name("Delhi").photo("DelhiPhoto").build(),
-                    City.builder().name("Mumbai").photo("MumbaiPhoto").build(),
-                    City.builder().name("Manila").photo("ManilaPhoto").build()
+                    new City(null, "Tokyo", "TokyoPhoto"),
+                    new City(null, "Jakarta", "JakartaPhoto"),
+                    new City(null, "Delhi", "DelhiPhoto"),
+                    new City(null, "Mumbai", "MumbaiPhoto"),
+                    new City(null, "Manila", "ManilaPhoto")
             ));
         }
     }
@@ -60,8 +60,8 @@ class CityServiceImplTest {
     void updateCity() {
         // given
         final Long cityId = 1L;
-        final City requestCity = City.builder().name("Warsaw").photo("warsaw.jpg").build();
-        final City cityToUpdate = City.builder().id(cityId).name("Gdansk").photo("gdansk.jpg").build();
+        final City requestCity = new City(null, "Warsaw", "warsaw.jpg");
+        final City cityToUpdate = new City(null, "Gdansk", "gdansk.jpg");
 
         when(cityRepository.findById(cityId)).thenReturn(Optional.of(cityToUpdate));
         when(cityRepository.save(cityToUpdate)).thenReturn(cityToUpdate);

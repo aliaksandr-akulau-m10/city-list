@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
     @Override
+    @Transactional
     public void importCities(final MultipartFile multipartFile) throws IOException {
         try (CSVParser csvParser = new CSVParser(
                 new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8),
@@ -40,19 +42,16 @@ public class CityServiceImpl implements CityService {
         )) {
             final List<City> cities = csvParser.getRecords()
                     .stream()
-                    .map(csvRecord -> City.builder()
-                            .name(csvRecord.get(1))
-                            .photo(csvRecord.get(2))
-                            .build())
+                    .map(csvRecord -> new City(null, csvRecord.get(1), csvRecord.get(2)))
                     .toList();
 
-            multipartFile.getInputStream().close();
             cityRepository.deleteAll();
             cityRepository.saveAll(cities);
         }
     }
 
     @Override
+    @Transactional
     public City updateCity(@NonNull final Long cityId, @NonNull final City city) {
         final City cityToUpdate = cityRepository.findById(cityId)
                 .orElseThrow(() -> {
@@ -65,6 +64,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getCities(@NonNull final Pageable pageable, @Nullable final String search) {
         return isEmpty(search)
                 ? cityRepository.findAll(pageable)
