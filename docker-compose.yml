@@ -11,9 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/create_tables.sql
   city-be-app:
-    image: fishbonne/cities-be
+    image: fishbonne/cities-be:latest
     container_name: city-be-app
     environment:
       - spring.datasource.url=jdbc:postgresql://db:5432/cities
@@ -22,7 +21,7 @@ services:
     depends_on:
       - db
   city-fe-app:
-    image: fishbonne/cities-fe
+    image: fishbonne/cities-fe:latest
     container_name: city-fe-app
     ports:
       - "80:80"

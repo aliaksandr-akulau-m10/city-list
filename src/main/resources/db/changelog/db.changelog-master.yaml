@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-city-table
+      author: Simon K
+      changes:
+        - createTable:
+            tableName: city
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: photo
+                  type: varchar
+                  constraints:
+                    nullable: false
+            ifNotExist: true
+        - createIndex:
+            tableName: city
+            indexName: city_name_index
+            columns:
+              - column:
+                  name: name
+            ifNotExist: true
+  - changeSet:
+      id: populate-city-table
+      author: Simon K
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: "SELECT COUNT(*) FROM city"
+        - loadData:
+            file: ./cities.csv
+            tableName: city
+            separator: ','
+            quotchar: '"'
+            columns:
+              - column:
+                  name: name
+                  type: string
+              - column:
+                  name: photo
+                  type: string

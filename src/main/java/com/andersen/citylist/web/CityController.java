@@ -46,10 +46,4 @@ public class CityController {
                 service.updateCity(cityId, cityMapper.toModel(cityViewModel))
         );
     }
-
-    @PostMapping("/import")
-    @PreAuthorize(value = "hasAuthority('ALLOW_EDIT')")
-    public void importCities(@RequestParam("cities") final MultipartFile multipartFile) throws IOException {
-        service.importCities(multipartFile);
-    }
 }

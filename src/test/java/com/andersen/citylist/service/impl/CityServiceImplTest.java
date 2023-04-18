@@ -10,10 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,28 +29,6 @@ class CityServiceImplTest {
 
     @InjectMocks
     private CityServiceImpl cityService;
-
-    @Test
-    void importCities() throws IOException {
-        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("cities.csv")) {
-            // given
-            MockMultipartFile mockMultipartFile = new MockMultipartFile("file.csv", inputStream);
-            doNothing().when(cityRepository).deleteAll();
-
-            // when
-            cityService.importCities(mockMultipartFile);
-
-            // then
-            verify(cityRepository, times(1)).deleteAll();
-            verify(cityRepository, times(1)).saveAll(List.of(
-                    new City(null, "Tokyo", "TokyoPhoto"),
-                    new City(null, "Jakarta", "JakartaPhoto"),
-                    new City(null, "Delhi", "DelhiPhoto"),
-                    new City(null, "Mumbai", "MumbaiPhoto"),
-                    new City(null, "Manila", "ManilaPhoto")
-            ));
-        }
-    }
 
     @Test
     void updateCity() {

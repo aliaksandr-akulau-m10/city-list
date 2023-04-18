@@ -9,7 +9,6 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-@Sql(scripts = "classpath:db-init.sql")
 @TestPropertySource(properties = "app.api-key=" + TEST_API_KEY)
 @ContextConfiguration(initializers = {Initializer.class})
 class CityControllerTest {
@@ -75,8 +73,8 @@ class CityControllerTest {
                 .andExpect(jsonPath("$.content[2].id", is(3)))
                 .andExpect(jsonPath("$.content[2].name", is("Delhi")))
                 .andExpect(jsonPath("$.content[2].photo").exists())
-                .andExpect(jsonPath("$.totalPages", is(2)))
-                .andExpect(jsonPath("$.totalElements", is(5)))
+                .andExpect(jsonPath("$.totalPages", is(334)))
+                .andExpect(jsonPath("$.totalElements", is(1000)))
                 .andExpect(jsonPath("$.size", is(3)))
                 .andExpect(jsonPath("$.pageable.pageNumber", is(0)))
                 .andExpect(status().isOk());
@@ -105,12 +103,12 @@ class CityControllerTest {
                         put("/api/v1/cities/4")
                                 .header(CONTENT_TYPE, APPLICATION_JSON)
                                 .header(X_APP_KEY_HEADER, TEST_API_KEY)
-                                .content("{\"name\": \"Warsaw\", \"photo\": \"warsawImageUrl\"}")
+                                .content("{\"name\": \"Warsaw\", \"photo\": \"https://warsawImageUrl.png\"}")
                 )
                 .andDo(print())
                 .andExpect(jsonPath("$.id", is(4)))
                 .andExpect(jsonPath("$.name", is("Warsaw")))
-                .andExpect(jsonPath("$.photo", is("warsawImageUrl")))
+                .andExpect(jsonPath("$.photo", is("https://warsawImageUrl.png")))
                 .andExpect(status().isOk());
     }
 
@@ -132,7 +130,7 @@ class CityControllerTest {
                         put("/api/v1/cities/4")
                                 .header(CONTENT_TYPE, APPLICATION_JSON)
                                 .header(X_APP_KEY_HEADER, "invalid-api-key")
-                                .content("{\"name\": \"Warsaw\", \"photo\": \"warsawImageUrl\"}")
+                                .content("{\"name\": \"Warsaw\", \"photo\": \"https://warsawImageUrl.png\"}")
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden());
@@ -141,10 +139,10 @@ class CityControllerTest {
     @Test
     void updateCity_cityDoesNotExist_404Http() throws Exception {
         mockMvc.perform(
-                        put("/api/v1/cities/6")
+                        put("/api/v1/cities/1001")
                                 .header(CONTENT_TYPE, APPLICATION_JSON)
                                 .header(X_APP_KEY_HEADER, TEST_API_KEY)
-                                .content("{\"id\": 1, \"name\": \"Warsaw\", \"photo\": \"warsawImageUrl\"}")
+                                .content("{\"id\": 1, \"name\": \"Warsaw\", \"photo\": \"https://warsawImageUrl.png\"}")
                 )
                 .andDo(print())
                 .andExpect(jsonPath("$.status", is(404)))

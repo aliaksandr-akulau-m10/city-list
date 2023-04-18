@@ -6,7 +6,7 @@ Content-Type: multipart/form-data; boundary=WebAppBoundary
 --WebAppBoundary
 Content-Disposition: form-data; name="cities"; filename="cities.csv""
 
-< ./cities.csv
+< ../src/main/resources/cities.csv
 --WebAppBoundary--
 
 ### Get cities

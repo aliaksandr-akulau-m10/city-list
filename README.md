@@ -5,7 +5,6 @@ This API allows:
 - Browsing through the paginated list of cities with the corresponding photos
 - Searching city by the name
 - Editing city (both name and photo)
-- Importing city data
 
 ## Technologies used
 
@@ -22,6 +21,7 @@ The Cities API service is a Maven based Java project.
 * TestContainers<br/>
 * Mockito<br/>
 * Mapstruct<br/>
+* Liquibase<br/>
 
 
 ### Usage
